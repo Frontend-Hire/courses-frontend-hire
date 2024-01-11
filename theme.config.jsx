@@ -21,11 +21,11 @@ const logo = (
 
 export default {
   head: () => {
-    const { title } = useConfig();
+    const { title = 'Courses' } = useConfig();
 
     return (
       <>
-        <title>{title || 'Courses'} - YHR</title>
+        <title>{title} - YHR</title>
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <meta property='og:title' content='Courses by Yarala Hruthik Reddy' />
         <meta
