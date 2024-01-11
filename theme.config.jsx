@@ -9,7 +9,7 @@ export default {
       />
     </>
   ),
-  logo: <span>Courses by Frontend Hire</span>,
+  logo: <span>Courses by Hruthik Reddy</span>,
   search: {
     placeholder: 'Search',
   },
