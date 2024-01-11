@@ -1,4 +1,14 @@
 export default {
+  head: (
+    <>
+      <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+      <meta property='og:title' content='Courses by Hruthik Reddy' />
+      <meta
+        property='og:description'
+        content="Course notes for Hruthik Reddy's courses that he teaches on various platforms."
+      />
+    </>
+  ),
   logo: <span>Courses by Frontend Hire</span>,
   search: {
     placeholder: 'Search',
