@@ -1,0 +1,100 @@
+import { Steps, Callout } from 'nextra/components';
+
+# Project Setup
+
+<Steps>
+### Vite + React
+ 
+We will use Vite with React as our starting point. To get started, run the following command in your terminal:
+
+```sh
+npm create vite@latest todo-app -- --template react
+```
+
+Read more about scaffolding a Vite project [here](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+ 
+### Prettier: The Opinionated Code Formatter
+
+<Callout>
+  Why should we even care about formatting our code? Well, it is a good practice to have a consistent code style across your project. It makes it easier for other developers to read and understand your code. It also makes it easier to spot errors and bugs.
+</Callout>
+
+We pretty much follow the same install instructions from the [Prettier Docs](https://prettier.io/docs/en/install).
+
+Prettier is not just used as a VSCode extension, but also as a CLI tool to format your code. We will use it to format our code before committing it to Git. To install it, run the following command in your terminal:
+
+```sh
+npm install --save-dev --save-exact prettier
+```
+
+Then, create an empty config file. We will add our own rules later.
+
+```sh
+node --eval "fs.writeFileSync('.prettierrc','{}\n')"
+```
+
+We also want to __not__ format certain files. In this project, we would not have such files but it is still a good idea to create one. Create a `.prettierignore` file and add the following:
+
+```sh
+# Ignore artifacts:
+build
+coverage
+```
+
+We can now format all files in our project by running the following command in our terminal:
+
+```sh
+npx prettier . --write
+```
+
+### Prettier: Editor Integration
+
+We assume that you are using VSCode as your editor. If not, you can still follow along but you will have to figure out how to integrate Prettier with your editor. Guide for other editors can be found [here](https://prettier.io/docs/en/editors).
+
+Install the Prettier extension for VSCode. You can find it [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode).
+
+We want to use Prettier as the default formatter and also format our code automatically when we save a file. To do this, we need to add the following to our VSCode settings:
+
+```json
+"editor.defaultFormatter": "esbenp.prettier-vscode",
+"editor.formatOnSave": true
+```
+
+You can also do this through the UI. Open the VSCode settings and search for `formatOnSave`. Check the box to enable it. Then, search for `defaultFormatter` and select `esbenp.prettier-vscode`.
+
+### ESLint
+
+ESLint is a tool for finding and fixing bugs in our JavaScript code. It also helps us to enforce code style and formatting conventions. Vite template already comes with ESLint installed.
+
+Since the formatting rules can sometimes conflict with Prettier, we will use the [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier#installation) to handle these conflicts.
+
+To install it, run the following command in your terminal:
+
+```sh
+npm install --save-dev eslint-config-prettier
+```
+
+Then, update your `.eslintrc.*` file to extend the `eslint-config-prettier` config (it is just the string `prettier`):
+
+```js {8}
+module.exports = {
+  root: true,
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+  ],
+  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-refresh'],
+  rules: {
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+  },
+};
+```
+</Steps>
