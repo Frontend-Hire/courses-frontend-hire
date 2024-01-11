@@ -1,3 +1,4 @@
+import App from 'next/app';
 import { Steps, Callout } from 'nextra/components';
 
 # Project Setup
@@ -13,6 +14,16 @@ npm create vite@latest todo-app -- --template react
 
 Read more about scaffolding a Vite project [here](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
  
+### Git
+
+Who doesn't use Git these days? We will use Git to manage our code versioning.
+
+To initialize a Git repository, run the following command in your terminal:
+
+```sh
+git init
+```
+
 ### Prettier: The Opinionated Code Formatter
 
 <Callout>
@@ -76,7 +87,7 @@ npm install --save-dev eslint-config-prettier
 
 Then, update your `.eslintrc.*` file to extend the `eslint-config-prettier` config (it is just the string `prettier`):
 
-```js {8}
+```js {8} showLineNumbers
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -97,4 +108,46 @@ module.exports = {
   },
 };
 ```
+
+### Git Hooks
+
+Git hooks are scripts that run automatically every time a particular event occurs in a Git repository. We will use it to run Prettier and ESLint before we commit our code. 
+
+This will ensure that we do not commit code that does not follow our code style and formatting conventions.
+
+Install Husky and lint-staged while also setting husky script and a pre-commit hook by running the following command in your terminal:
+```sh
+npm install --save-dev husky lint-staged
+npx husky install
+npm pkg set scripts.prepare="husky install"
+npx husky add .husky/pre-commit "npx lint-staged"
+```
+
+Then, update your `package.json` file to include the following:
+```json
+{
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
+```
+
+### Great! Now, we are all set to start coding!
+
+But lets first clear some of the boilerplate code that comes with the Vite template.
+
+- Delete the `App.css` file and `assets` folder from the `src` directory.
+- Clear the contents of the `index.css` file.
+- Update the contents of the `App.jsx` file to the following:
+
+```jsx showLineNumbers
+function App() {
+  return <div>Hello World!</div>;
+}
+
+export default App;
+```
+
+That's it! We are now ready to start coding our Todo App!
+
 </Steps>
