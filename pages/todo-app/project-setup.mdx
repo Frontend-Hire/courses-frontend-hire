@@ -4,12 +4,12 @@ import { Steps, Callout } from 'nextra/components';
 # Project Setup
 
 <Steps>
-### Vite + React
+### Vite + React + TypeScript
  
-We will use Vite with React as our starting point. To get started, run the following command in your terminal:
+We will use the Vite template with React and TypeScript as our starting point. To get started, run the following command in your terminal:
 
 ```sh
-npm create vite@latest todo-app -- --template react
+npm create vite@latest todo-app -- --template react-ts
 ```
 
 Read more about scaffolding a Vite project [here](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
@@ -38,10 +38,22 @@ Prettier is not just used as a VSCode extension, but also as a CLI tool to forma
 npm install --save-dev --save-exact prettier
 ```
 
-Then, create an empty config file. We will add our own rules later.
+Then, create an empty config file.
 
 ```sh
 node --eval "fs.writeFileSync('.prettierrc','{}\n')"
+```
+
+and add the following to it. Feel free to change the values to your liking (this is what I prefer):
+
+```json
+{
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 80
+}
 ```
 
 We also want to __not__ format certain files. In this project, we would not have such files but it is still a good idea to create one. Create a `.prettierignore` file and add the following:
@@ -138,14 +150,21 @@ But lets first clear some of the boilerplate code that comes with the Vite templ
 
 - Delete the `App.css` file and `assets` folder from the `src` directory.
 - Clear the contents of the `index.css` file.
-- Update the contents of the `App.jsx` file to the following:
+- Update the contents of the `App.tsx` file to the following:
 
-```jsx showLineNumbers
+```tsx showLineNumbers filename="App.tsx"
 function App() {
   return <div>Hello World!</div>;
 }
 
 export default App;
+```
+
+Let's save our work and commit it to Git.
+
+```sh
+git add .
+git commit -m "Initial commit"
 ```
 
 That's it! We are now ready to start coding our Todo App!
