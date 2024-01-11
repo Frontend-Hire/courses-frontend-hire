@@ -1,3 +1,5 @@
+import { useConfig } from 'nextra-theme-docs';
+
 const logo = (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -18,17 +20,21 @@ const logo = (
 );
 
 export default {
-  head: (
-    <>
-      <title>Courses by YHR</title>
-      <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-      <meta property='og:title' content='Courses by Yarala Hruthik Reddy' />
-      <meta
-        property='og:description'
-        content="Course notes for Hruthik Reddy's courses that he teaches on various platforms."
-      />
-    </>
-  ),
+  head: () => {
+    const { title } = useConfig();
+
+    return (
+      <>
+        <title>{title} - YHR</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+        <meta property='og:title' content='Courses by Yarala Hruthik Reddy' />
+        <meta
+          property='og:description'
+          content="Course notes for Hruthik Reddy's courses that he teaches on various platforms."
+        />
+      </>
+    );
+  },
   logo,
   search: {
     placeholder: 'Search',
