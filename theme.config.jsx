@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useConfig } from 'nextra-theme-docs';
 
 const logo = (
@@ -20,14 +21,24 @@ const logo = (
 );
 
 export default {
+  useNextSeoProps() {
+    const { asPath } = useRouter();
+    if (asPath !== '/') {
+      return {
+        titleTemplate: '%s - YHR',
+      };
+    }
+  },
   head: () => {
     const { title = 'Courses' } = useConfig();
 
     return (
       <>
-        <title>{title} - YHR</title>
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-        <meta property='og:title' content='Courses by Yarala Hruthik Reddy' />
+        <meta
+          property='og:title'
+          content={`${title} by Yarala Hruthik Reddy`}
+        />
         <meta
           property='og:description'
           content="Course notes for Hruthik Reddy's courses that he teaches on various platforms."
