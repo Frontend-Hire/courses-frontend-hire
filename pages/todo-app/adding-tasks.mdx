@@ -1,0 +1,106 @@
+# Adding Tasks
+
+Let us add some interactivity by letting the user add tasks to the list. We'll add a text input and a button. When the user clicks the button, we'll add the text from the input to the list of tasks.
+
+## Adding a Text Input and Button
+
+First, let's add a text input and a button to the page. We'll add them just above the list of tasks.
+
+```tsx {5, 6} filename="./src/App.tsx"
+// Rest of the code omitted for brevity
+
+<div>
+  <h1>Tasks</h1>
+  <input />
+  <button>Add</button>
+  <ul>
+    {tasks.map((task) => (
+      <li key={task.id}>{task.title}</li>
+    ))}
+  </ul>
+</div>
+
+// Rest of the code omitted for brevity
+```
+
+Though this is good enough for now, we can and __should__ make it more accessible by adding a label for the input and a `htmlFor` attribute on the label that matches the `id` of the input.
+
+```tsx {5, 6} filename="./src/App.tsx"
+// Rest of the code omitted for brevity
+
+<div>
+  <h1>Tasks</h1>
+  <label htmlFor="task-input">Add Task: </label>
+  <input id="task-input" />
+  <button>Add</button>
+  <ul>
+    {tasks.map((task) => (
+      <li key={task.id}>{task.title}</li>
+    ))}
+  </ul>
+</div>
+
+// Rest of the code omitted for brevity
+```
+
+Now clicking on the label will focus the input.
+
+## Adding a Task
+
+The Add button does't do anything yet. Let's add a click handler to it that will log to the console for now.
+
+```tsx {7-13} filename="./src/App.tsx"
+// Rest of the code omitted for brevity
+
+<div>
+  <h1>Tasks</h1>
+  <label htmlFor="task-input">Add Task: </label>
+  <input id="task-input" />
+  <button
+        onClick={() => {
+          console.log('Add');
+        }}
+      >
+        Add
+      </button>
+  <ul>
+    {tasks.map((task) => (
+      <li key={task.id}>{task.title}</li>
+    ))}
+  </ul>
+</div>
+
+// Rest of the code omitted for brevity
+```
+
+Let's capture the value of the input and log it to the console. The one of the ways to do this in React is to use a state variable to track the value of the input. 
+
+We'll use the `useState` hook to create a state variable and a setter function for it. We'll also add a `value` attribute to the input and set it to the state variable. While we are at it, let's also add a `onChange` handler to the input that will update the state variable. This input is now a [controlled input](https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable).
+
+
+```tsx filename="./src/App.tsx" {1, 8, 16-17}
+import React from 'react';
+
+// Some of the code omitted for brevity
+
+function App() {
+  // Some of the code omitted for brevity
+
+  const [taskName, setTaskName] = React.useState('');
+
+  return (
+    <div>
+      {/* Some of the code omitted for brevity */}
+
+      <input
+        id="task-input"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+      />
+      {/* Some of the code omitted for brevity */}
+    </div>
+  );
+}
+
+// Some of the code omitted for brevity
+```
