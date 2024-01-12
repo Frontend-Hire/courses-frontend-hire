@@ -3,5 +3,11 @@
   "---": {
     "type": "separator"
   },
-  "todo-app": "Todo Application"
+  "todo-app": "Todo Application",
+  "Hruthik Reddy Yarala": {
+    "title": "More About YHR ↗",
+    "type": "page",
+    "href": "https://www.iamyhr.com/",
+    "newWindow": true
+  }
 }
