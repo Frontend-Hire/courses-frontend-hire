@@ -101,14 +101,6 @@ Either way, we need to install RTL so that we can test our React components. Run
 npm install -D @testing-library/react
 ```
 
-This is not enough because we want to test certain things that are not possible with RTL. For example, we want to test if a certain element is visible or not. So, we need to install another library in the ecosystem called `jest-dom` which adds custom DOM element matchers ([read more here](https://testing-library.com/docs/ecosystem-jest-dom)). Run the following command in your terminal:
-
-```sh
-npm install -D @testing-library/jest-dom
-```
-
-In fact, these two are almost always used together.
-
 Also, since we use Vitest and not Jest ([read more here](https://testing-library.com/docs/react-testing-library/setup#using-without-jest)), we have to install a test environment called `jsdom`. Run the following command in your terminal:
 
 ```sh
@@ -123,7 +115,7 @@ But to figure out the actual configuration can be painful. I'd suggest going thr
 
 The best part about configuring Vitest is that we can use our existing `vite.config.ts` file. We just need to add a few lines of code to it.
 
-```ts {1, 8-12} filename="./vite.config.ts"
+```ts {1, 8-10} filename="./vite.config.ts"
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -133,44 +125,10 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    globals: true,
-    setupFiles: ['./test-setup.ts'],
   },
 });
 ```
 
-We got this configuration from the docs [here](https://vitest.dev/config/#configuring-vitest). 
-
-We still have to create the `test-setup.ts` file. Create the file at the root of your project and paste the following code inside it:
-
-```ts {1-7} filename="./test-setup.ts"
-import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/vitest';
-
-// You'd see an error here due to TypeScript. We'll fix it in a moment.
-afterEach(() => { 
-  cleanup();
-});
-```
-
-We added a comment for a potential error due to TypeScript. Now logically, this a correct error from TypeScript's perspective because where is this `afterEach` function coming from? We need to import it from somewhere. 
-
-This actually comes from the `vitest` package and in our config file, we specified a property called `globals` which is set to `true`. This means that we want to use the functions provided by Vitest globally without importing them explicitly ([read more here](https://vitest.dev/config/#globals)).
-
-We just have to tell TypeScript that this is the case. Just update your `tsconfig.json` file to include the following:
-
-```json {5-6, 8-9} filename="./tsconfig.json"
-{
-  "compilerOptions": {
-    // Some of the options omitted for brevity
-
-    /* Testing */
-    "types": ["vitest/globals"]
-  },
-  /* Since our test setup file is not inside the src folder, we need to include it here. */
-  "include": ["src", "./test-setup.ts"], 
-  "references": [{ "path": "./tsconfig.node.json" }]
-}
-```
+We got this configuration from the docs [here](https://vitest.dev/config/#configuring-vitest). There might be more configuration and packages required but we will figure that out as we need.
 
 Great, everything is setup. Now, we can start writing our first real tests.
