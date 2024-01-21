@@ -58,6 +58,14 @@ export default {
   toc: {
     backToTop: true,
   },
+  banner: {
+    key: 'sponsor',
+    text: (
+      <a href='https://www.buymeacoffee.com/iamyhr' target='_blank'>
+        🥰 Support this project by sponsoring a coffee here →
+      </a>
+    ),
+  },
   chat: {
     link: 'https://www.linkedin.com/in/yarala-hruthik-reddy/',
     icon: (
