@@ -148,7 +148,7 @@ The `jest-dom` import (line 3 in the above snippet) usually happens in a separat
 
 Create a new file `setupTests.ts` at the root of the project and add the import there.
 
-```tsx showLineNumbers {1} filename="./setupTests.ts"
+```ts showLineNumbers {1} filename="./setupTests.ts"
 import '@testing-library/jest-dom/vitest';
 ```
 
@@ -234,6 +234,178 @@ module.exports = {
 
 ## Testing the user interaction
 
-Work in progress....
+Let us now write a test to check if the user can add a task to the list.
+
+```tsx showLineNumbers {16} filename="./src/App.test.tsx"
+import { describe, expect, test } from 'vitest';
+import { render, screen } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  test('should render input field and add button', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  test('should add task to list when add button is clicked', () => {});
+});
+```
+
+So, how can we test user interaction? If we look at the docs of `Testing Library`, you can see a section for `User Actions` under the `Core API` and a page for `Firing Events`. [Here's the exact link to the page](https://testing-library.com/docs/dom-testing-library/api-events). 
+
+Inputs are usually changed and buttons are clicked. We pretty much end up with something like this:
+
+```tsx showLineNumbers {2, 17-23} filename="./src/App.test.tsx"
+import { describe, expect, test } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  test('should render input field and add button', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  test('should add task to list when add button is clicked', () => {
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    fireEvent.change(input, { target: { value: 'New Task' } });
+    fireEvent.click(button);
+
+    expect(screen.getByText('New Task')).toBeInTheDocument();
+  });
+});
+```
+
+Now, if you run your tests they should be passing! But a couple of things are not good here.
+
+- First, we are still using the old rendered component from the previous test. This can cause issues if we are not careful. So, we need to render a new component again.
+
+```tsx showLineNumbers {17} filename="./src/App.test.tsx"
+import { describe, expect, test } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  test('should render input field and add button', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  test('should add task to list when add button is clicked', () => {
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    fireEvent.change(input, { target: { value: 'New Task' } });
+    fireEvent.click(button);
+
+    expect(screen.getByText('New Task')).toBeInTheDocument();
+  });
+});
+```
+
+You might try doing something like the above! But that will fail the tests with this error:
+![Test Fail](./screenshots/writing-tests-3.png)
+
+The error might be imtidiating at first, but it is actually very helpful. It tells us that there multiple elements with the same text. This happened because we did not `clean up` our first test's render. So, the second render had the first test's elements as well. So, we need to clean up the first render and any such subsequent renders.
+
+```tsx showLineNumbers {1-2, 6} filename="./src/App.test.tsx"
+import { describe, expect, test, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+
+import App from './App';
+
+afterEach(cleanup);
+
+describe('App', () => {
+  test('should render input field and add button', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  test('should add task to list when add button is clicked', () => {
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    fireEvent.change(input, { target: { value: 'New Task' } });
+    fireEvent.click(button);
+
+    expect(screen.getByText('New Task')).toBeInTheDocument();
+  });
+});
+```
+
+Now, our ESLint rules would complain that:
+`cleanup is performed automatically by your test runner, you don't need manual cleanups.`
+
+You can read more about this here and figure out the why and solution. [Here's the link](https://testing-library.com/docs/react-testing-library/api#cleanup)
+
+In short, ESLint assumes we have a global afterEach declared. But we do not! There are multiple ways to fix this issue, we will solve it by moving our clean up logic to the global setup file.
+
+```ts showLineNumbers {2-3, 5} filename="./setupTests.ts"
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
+
+afterEach(cleanup);
+```
+
+And clean up our `./src/App.test.tsx` file
+
+```tsx showLineNumbers filename="./src/App.test.tsx"
+import { describe, expect, test } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  test('should render input field and add button', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  test('should add task to list when add button is clicked', () => {
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    fireEvent.change(input, { target: { value: 'New Task' } });
+    fireEvent.click(button);
+
+    expect(screen.getByText('New Task')).toBeInTheDocument();
+  });
+});
+```
+
+This is also good because we are not repeating the same code in every test and even if someone forgets to clean up, it will be taken care of.
 
 At this point your code should be a good match to the branch of the repository: [5-writing-tests](https://github.com/yaralahruthik/todo-app/tree/5-writing-tests)
