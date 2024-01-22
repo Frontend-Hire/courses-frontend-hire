@@ -408,4 +408,105 @@ describe('App', () => {
 
 This is also good because we are not repeating the same code in every test and even if someone forgets to clean up, it will be taken care of.
 
+Now, run the tests and they should pass. But there is still a problem:
+
+- To greatly amplify the problem, let us make the input field `readonly` and see if our tests still pass.
+
+```tsx showLineNumbers {10} filename="./src/App.tsx"
+// Rest of the code omitted for brevity
+
+function App() {
+  // Some of the code omitted for brevity
+
+  return (
+    <div>
+      {/* Some of the code omitted for brevity */}
+      <input
+        readOnly
+        id="task-input"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+      />
+      {/* Some of the code omitted for brevity */}
+    </div>
+  );
+}
+
+// Rest of the code omitted for brevity
+```
+
+Our tests will still pass! But, we know that the user cannot type in the input field. What we have right now is a false positive.
+
+In fact, we could have avoided this problem if we had used a different way of testing user interaction. Even the docs, recommends another library called `user-event` for testing user interaction. [Here's the link to the docs](https://testing-library.com/docs/user-event/intro)
+
+Let us install `user-event` and use it in our tests.
+
+```sh
+npm install -D @testing-library/user-event
+```
+
+Since, user interactions are asynchronous, we need to use `async`, `await`, and `waitFor` from `@testing-library/react` to wait for the changes to take effect. (read more about [async methods](https://testing-library.com/docs/dom-testing-library/api-async))
+
+```tsx showLineNumbers {2-3, 18, 24-25, 27-29} filename="./src/App.test.tsx"
+import { describe, expect, test } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import App from './App';
+
+describe('App', () => {
+  test('should render input field and add button', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  test('should add task to list when add button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    await user.type(input, 'New Task');
+    await user.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText('New Task')).toBeInTheDocument();
+    });
+  });
+});
+```
+
+Our tests __should fail__. Because we are using `readOnly` on the input field. So, remove the `readOnly` prop from the input field and run the tests again.
+
+```tsx showLineNumbers filename="./src/App.tsx"
+// Rest of the code omitted for brevity
+
+function App() {
+  // Some of the code omitted for brevity
+
+  return (
+    <div>
+      {/* Some of the code omitted for brevity */}
+      <input
+        id="task-input"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+      />
+      {/* Some of the code omitted for brevity */}
+    </div>
+  );
+}
+
+// Rest of the code omitted for brevity
+```
+
+Our tests should pass now. We also have a more robust test for user interaction.
+
+Now, we have made a decent amount of progress on tests. Remember, where we left our actual business logic? Let us get back to that with `TDD` (Test Driven Development) in the next section.
+
 At this point your code should be a good match to the branch of the repository: [5-writing-tests](https://github.com/yaralahruthik/todo-app/tree/5-writing-tests)
