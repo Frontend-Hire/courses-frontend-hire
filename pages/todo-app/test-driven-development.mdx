@@ -210,9 +210,9 @@ function App() {
 You can already see that we unintentionally fixed an edge case where the added task name was also trimmed. The power of having to think about the problem before writing the code. We also cleared our initial data for our tasks. Our tests should now pass.
 
 <Callout>
-You could also disable the add button if the input field is empty. It is usually considered a bad practice to disable buttons because it affects accessibility. Imagine a user who is using a screen reader and they are not able to add a task because the add button is disabled. They would not know why the button is disabled. So, it's better to not disable buttons and instead show an error message to the user.
+You could also disable the add button if the input field is empty. It is usually considered a bad practice to disable buttons and I agree with that. The why is out of the scope of this tutorial.
 
-I'd suggest reading the article "[The problem with disabled buttons and what to do instead](https://adamsilver.io/blog/the-problem-with-disabled-buttons-and-what-to-do-instead/)" by [Adam Silver](https://adamsilver.io/) to learn more about why you should not disable buttons.
+But I'd suggest reading the article "[The problem with disabled buttons and what to do instead](https://adamsilver.io/blog/the-problem-with-disabled-buttons-and-what-to-do-instead/)" by [Adam Silver](https://adamsilver.io/) to learn more about why you should not disable buttons.
 </Callout>
 
 ### Test: should add a task by pressing the enter key
