@@ -1,3 +1,327 @@
+import { Steps, Callout } from 'nextra/components';
+
 # TDD (Test Driven Development)
 
-Work in progress
+Let's run our dev server and see the current state of our Todo app.
+  
+```sh
+npm run dev
+```
+
+And open the respective dev server url in the browser.
+
+Now, we can immediately see a couple of things that we need to fix:
+
+1. When we type into the input field and click on the add button, task gets added but the input field is not cleared.
+2. Click on the add button with an empty input field and you can add an empty task, which should not happen.
+3. A good to have feature would be to add a task by pressing the enter key.
+
+Let's fix these issues one by one while following a Test Driven Development approach.
+
+## What is TDD?
+
+You could Google it and find a lot of definitions. Here is a simple one:
+
+> TDD is a software development process in which you write tests before you write the actual code.
+
+## Why TDD?
+
+- It helps you to think about the problem you are trying to solve before you write the code.
+- It helps you to write more confident code.
+- It helps you to write more testable code.
+- It helps improve accessibility.
+- It helps in refactoring.
+
+Now, let's get started with TDD.
+
+## Let's fix the issues
+
+<Steps>
+
+### Declare the tests first
+
+A good name for the tests would be: 
+
+1. `should clear the input field after adding a task`.
+2. `should not add an empty task`.
+3. `should add a task by pressing the enter key`.
+
+```tsx showLineNumbers {6, 8, 10} filename="./src/App.test.tsx"
+// Rest of the code is omitted for brevity
+
+describe('App', () => {
+  // Some of the tests are omitted for brevity
+
+  test.todo('should clear the input field after adding a task', () => {});
+
+  test.todo('should not add an empty task', () => {});
+
+  test.todo('should add a task by pressing the enter key', () => {});
+});
+```
+
+What's a `test.todo` you ask? It's a test that is yet to be implemented. It's a good practice to write all the tests first and then implement them one by one. (Read more about it [here](https://vitest.dev/api/#test-todo)).
+
+If you run the tests now, you will see an output like the below:
+
+![Todo Tests](./screenshots/test-driven-development-1.png)
+
+The todo tests are marked as skipped. Let's implement them one by one.
+
+### Test: should clear the input field after adding a task
+
+Let's implement the first test. We need to do the following:
+
+1. Type into the input field.
+2. Click on the add button.
+3. Assert that the input field is cleared.
+
+```tsx showLineNumbers {6-19} filename="./src/App.test.tsx"
+// Rest of the code is omitted for brevit
+
+describe('App', () => {
+  // Some of the tests are omitted for brevity
+
+  test('should clear the input field after adding a task', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    await user.type(input, 'New Task');
+    await user.click(button);
+
+    await waitFor(() => {
+      expect(input).toHaveValue('');
+    });
+  });
+
+  // Some of the tests are omitted for brevity
+});
+```
+
+Make sure to remove the `test.todo` and replace it with `test` before running the tests and you should see a failing test.
+
+![Failing Test](./screenshots/test-driven-development-2.png)
+
+Let's now write the code to make the test pass.
+
+```tsx showLineNumbers {16} filename="./src/App.tsx"
+// Rest of the code is omitted for brevity
+
+function App() {
+  // Some of the code is omitted for brevity
+
+  const onAddTask = () => {
+    setTasks([
+      ...tasks,
+      {
+        id: new Date().getTime(), // Not a great way to generate IDs
+        title: taskName,
+        isCompleted: false,
+      },
+    ]);
+
+    setTaskName('');
+  };
+
+  // Some of the code is omitted for brevity
+}
+
+// Rest of the code is omitted for brevity
+```
+
+Literally, all we did was to add `setTaskName('')` after adding the task to the list of tasks. Our tests should now pass.
+
+<Callout>
+Too much test code for a simple implementation? Yes, might seem useless but imagine in the future you had to refactor the code (any software will always grow unless abandoned) and you forgot to clear the input field after adding a task. Your tests would fail and you would know that you need to fix the code.
+</Callout>
+
+### Test: should not add an empty task
+
+Let's implement the second test. We need to do the following:
+
+1. Click on the add button.
+2. Assert that the task is not added to the list of tasks.
+
+```tsx showLineNumbers {6-19} filename="./src/App.test.tsx"
+// Rest of the code is omitted for brevity
+
+describe('App', () => {
+  // Some of the tests are omitted for brevity
+
+  test('should not add an empty task', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    await user.type(input, '   '); // Makes sense to also test with spaces
+    await user.click(button);
+
+    await waitFor(() => {
+      expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    });
+  });
+
+  // Some of the tests are omitted for brevity
+});
+```
+
+Make sure to remove the `test.todo` and replace it with `test` before running the tests and you should see a failing test.
+
+Let's now write the code to make the test pass.
+
+```tsx showLineNumbers {4, 9, 11-13, 19} filename="./src/App.tsx"
+// Rest of the code is omitted for brevity
+
+function App() {
+  const [tasks, setTasks] = React.useState<Task[]>([]);
+
+  const [taskName, setTaskName] = React.useState('');
+
+  const onAddTask = () => {
+    const trimmedTaskName = taskName.trim();
+
+    if (!trimmedTaskName) {
+      return;
+    }
+
+    setTasks([
+      ...tasks,
+      {
+        id: new Date().getTime(), // Not a great way to generate IDs
+        title: trimmedTaskName,
+        isCompleted: false,
+      },
+    ]);
+
+    setTaskName('');
+  };
+
+  // Some of the code is omitted for brevity
+}
+
+// Rest of the code is omitted for brevity
+```
+
+You can already see that we unintentionally fixed an edge case where the added task name was also trimmed. The power of having to think about the problem before writing the code. We also cleared our initial data for our tasks. Our tests should now pass.
+
+<Callout>
+You could also disable the add button if the input field is empty. It is usually considered a bad practice to disable buttons because it affects accessibility. Imagine a user who is using a screen reader and they are not able to add a task because the add button is disabled. They would not know why the button is disabled. So, it's better to not disable buttons and instead show an error message to the user.
+
+I'd suggest reading the article "[The problem with disabled buttons and what to do instead](https://adamsilver.io/blog/the-problem-with-disabled-buttons-and-what-to-do-instead/)" by [Adam Silver](https://adamsilver.io/) to learn more about why you should not disable buttons.
+</Callout>
+
+### Test: should add a task by pressing the enter key
+
+Let's implement the third test. We need to do the following:
+
+1. Type into the input field.
+2. Press the enter key.
+3. Assert that the task is added to the list of tasks.
+
+```tsx showLineNumbers {6-19} filename="./src/App.test.tsx"
+// Rest of the code is omitted for brevity
+
+describe('App', () => {
+  // Some of the tests are omitted for brevity
+
+  test('should add a task by pressing the enter key', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+
+    await user.type(input, 'New Task{enter}');
+
+    await waitFor(() => {
+      expect(screen.queryAllByRole('listitem')).toHaveLength(1);
+    });
+  });
+
+  // Some of the tests are omitted for brevity
+});
+```
+
+Make sure to remove the `test.todo` and replace it with `test` before running the tests and you should see a failing test.
+
+Let's now write the code to make the test pass.
+
+```tsx showLineNumbers {14-18} filename="./src/App.tsx"
+// Rest of the code is omitted for brevity
+
+function App() {
+  // Some of the code is omitted for brevity
+
+  return (
+    <div>
+      {/* Rest of the code is omitted for brevity */}
+
+      <input
+        id="task-input"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onAddTask();
+          }
+        }}
+      />
+
+      {/* Rest of the code is omitted for brevity */}
+    </div>
+  );
+}
+
+// Rest of the code is omitted for brevity
+```
+
+Our tests should now pass. Now, we could also further refactor this inline keydown handler into a separate function. Pretty simple and if our tests fail, we know that we broke something.
+
+Here's how your final code should look like:
+
+```tsx showLineNumbers {6-10, 20} filename="./src/App.tsx"
+// Rest of the code is omitted for brevity
+
+function App() {
+  // Some of the code is omitted for brevity
+
+  const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onAddTask();
+    }
+  };
+
+  return (
+    <div>
+      {/* Rest of the code is omitted for brevity */}
+
+      <input
+        id="task-input"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+        onKeyDown={onInputKeyDown}
+      />
+      
+      {/* Rest of the code is omitted for brevity */}
+    </div>
+  );
+}
+
+// Rest of the code is omitted for brevity
+```
+
+</Steps>
+
+Great, we have now fixed all the issues. Let's run our tests again and see if everything is working as expected.
+
+```sh
+npm run test
+```
+
+![All Tests Passing](./screenshots/test-driven-development-3.png)
+
+Great, all the tests are passing. Now, we can be confident that our Todo app is working as expected even if we refactor the code in the future. In fact, we will do a good amount refactoring in the next section.
