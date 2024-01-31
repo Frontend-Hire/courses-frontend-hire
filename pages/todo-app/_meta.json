@@ -6,5 +6,7 @@
   "setup-testing": "Setup Testing",
   "writing-tests": "Writing Tests",
   "test-driven-development": "TDD (Test Driven Development)",
-  "refactoring": "Refactoring"
+  "refactoring": "Refactoring",
+  "component-composition": "Component Composition",
+  "summary": "Summary"
 }
