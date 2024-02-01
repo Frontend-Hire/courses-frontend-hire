@@ -127,6 +127,8 @@ export default {
   footer: {
     text: <span>© Yarala Hruthik Reddy {new Date().getFullYear()}</span>,
   },
+  docsRepositoryBase:
+    'https://github.com/Frontend-Hire/courses-frontend-hire/tree/main',
   toc: {
     backToTop: true,
   },
