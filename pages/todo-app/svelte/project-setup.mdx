@@ -116,8 +116,7 @@ This will create a `.husky` directory in the root of our project. Inside this di
 Open the `pre-commit` file and add the following:
 
 ```sh filename=".husky/pre-commit"
-npm run lint
-npm run format
+npm run format && npm run lint
 ```
 
 This will run the `lint` and `format` scripts before we commit our code.
