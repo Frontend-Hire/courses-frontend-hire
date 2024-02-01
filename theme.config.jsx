@@ -100,7 +100,7 @@ export default {
     const { asPath } = useRouter();
     if (asPath !== '/') {
       return {
-        titleTemplate: '%s - YHR',
+        titleTemplate: '%s - Frontend Hire',
       };
     }
   },
