@@ -135,7 +135,7 @@ This will ensure that we do not commit code that does not follow our code style 
 
 Install Husky and lint-staged while also setting husky script and a pre-commit hook by running the following command in your terminal:
 ```sh
-npm install --save-dev husky lint-staged
+npm install --save-dev husky@8.0.3 lint-staged
 npx husky install
 npm pkg set scripts.prepare="husky install"
 npx husky add .husky/pre-commit "npx lint-staged"
@@ -149,6 +149,14 @@ Then, update your `package.json` file to include the following:
   }
 }
 ```
+
+<Callout>
+Note the version of husky above `husky@8.0.3`. 
+
+This is because in the live session Husky did not work because of a new version that is a breaking change `9.0.0`. 
+
+Though we were able to solve it. We will be updating the instructions soon to use latest version of Husky
+</Callout>
 
 ### Great! Now, we are all set to start coding!
 
