@@ -1,3 +1,4 @@
 {
-  "react-typescript": "React + TypeScript"
+  "react": "React",
+  "svelte": "Svelte"
 }
