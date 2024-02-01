@@ -6,10 +6,10 @@
   "todo-app": "Todo with React, TypeScript, and TDD",
   "building-in-public-101": "Building in Public 101",
   "code-playground": "Code Playground",
-  "Hruthik Reddy Yarala": {
-    "title": "More About YHR ↗",
+  "Frontend Hire": {
+    "title": "Frontend Hire ↗",
     "type": "page",
-    "href": "https://www.iamyhr.com/",
+    "href": "https://www.frontendhire.com/",
     "newWindow": true
   }
 }
