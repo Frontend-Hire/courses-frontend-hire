@@ -125,7 +125,11 @@ export default {
   primaryHue: 300,
   primarySaturation: 100,
   footer: {
-    text: <span>© Yarala Hruthik Reddy {new Date().getFullYear()}</span>,
+    text: (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <span>© Frontend Hire {new Date().getFullYear()}</span>
+      </div>
+    ),
   },
   docsRepositoryBase:
     'https://github.com/Frontend-Hire/courses-frontend-hire/tree/main',
