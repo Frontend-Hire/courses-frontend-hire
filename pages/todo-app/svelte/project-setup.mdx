@@ -91,7 +91,7 @@ You can also do this through the UI. Open the VSCode settings and search for `fo
 
 ESLint is a tool for finding and fixing bugs in our JavaScript code. It also helps us to enforce code style and formatting conventions. 
 
-We do not have to install ESLint as the SvelteKit installation step already did it us.
+We do not have to install ESLint as the SvelteKit installation step already did it us. We also do not have to configure it to work with Prettier as it is already done for us.
 
 ### Git Hooks
 
@@ -99,27 +99,22 @@ Git hooks are scripts that run automatically every time a particular event occur
 
 This will ensure that we do not commit code that does not follow our code style and formatting conventions.
 
-Install Husky, we pretty much follow the official instructions [here](https://typicode.github.io/husky/get-started.html).
+Install Husky and lint-staged while also setting husky script and a pre-commit hook by running the following commands in your terminal:
 
 ```sh
-npm install --save-dev husky
-```
-
-Then run the following command to initialize Husky:
-
-```sh
+npm install --save-dev husky lint-staged
 npx husky init
+node --eval "fs.writeFileSync('.husky/pre-commit','npx lint-staged\n')"
 ```
 
-This will create a `.husky` directory in the root of our project. Inside this directory, we will find a `pre-commit` file. This is where we will add our commands to lint and format.
-
-Open the `pre-commit` file and add the following:
-
-```sh filename=".husky/pre-commit"
-npm run format && npm run lint
+Then, update your `package.json` file to include the following:
+```json
+{
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
 ```
-
-This will run the `lint` and `format` scripts before we commit our code.
 
 Let's commit our changes:
 
