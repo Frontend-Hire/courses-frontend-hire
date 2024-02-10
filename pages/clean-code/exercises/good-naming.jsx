@@ -25,6 +25,7 @@ export const Problem1Solution = () => {
       <CustomSandpack
         template='vanilla'
         theme='dark'
+        readOnly
         options={{
           activeFile: '/Solution.js',
           visibleFiles: ['/Solution.js'],
@@ -32,7 +33,6 @@ export const Problem1Solution = () => {
         files={{
           '/Solution.js': {
             code: '',
-            readOnly: true,
           },
         }}
       />
