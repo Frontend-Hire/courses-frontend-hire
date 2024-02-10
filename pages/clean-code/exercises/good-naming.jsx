@@ -39,3 +39,5 @@ export const Problem1Solution = () => {
     </SolutionWrapper>
   );
 };
+
+export default {};
