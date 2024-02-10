@@ -1,5 +1,5 @@
-import SolutionWrapper from '../../../components/SolutionWrapper';
-import CustomSandpack from '../../../components/CustomSandpack';
+import CustomSandpack from '../components/CustomSandpack';
+import SolutionWrapper from '../components/SolutionWrapper';
 
 export const Problem1 = () => {
   return (
@@ -39,5 +39,3 @@ export const Problem1Solution = () => {
     </SolutionWrapper>
   );
 };
-
-export default {};
