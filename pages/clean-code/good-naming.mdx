@@ -1,0 +1,83 @@
+import {
+  Problem1,
+  Problem1Solution,
+  Problem2,
+  Problem2Solution,
+} from '../../exercises/good-naming';
+
+# Good Naming
+
+If we remove the JavaScript's reserved keywords (var, let, const, for, while, if, function) from a code base, what would we see? We would pretty much see the stuff that we or others named. This includes the names we gave our variables, functions and classes.
+
+This chapter is all about how to name stuff in a good way. Remember we did not name the chapter "Best Naming", even the book ["Clean Code"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/) names the particular chapter as "Meaningful Names" because there are no hard and fast rules to naming stuff. It all boils down to our effort put into naming something.
+
+The book ["Clean Code"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/) has a list of sub-chapters under "Meaningful Names" which are as follows:
+
+1. Use Intention-Revealing Names
+2. Avoid Disinformation
+3. Make Meaningful Distinctions
+4. Use Pronounceable Names
+5. Use Searchable Names
+6. Avoid Encodings
+7. Avoid Mental Mapping
+8. Class Names
+9. Method Names
+10. Don't Be Cute
+11. Pick One Word per Concept
+12. Don't Pun
+13. Use Solution Domain Names
+14. Use Problem Domain Names
+15. Add Meaningful Context
+16. Don't Add Gratuitous Context
+
+We won't be covering them as sub-chapters but we will be covering them as a whole and taking the liberty to keep them relevant to Web Languages like CSS, JavaScript, and React (feel free to skip this if you do not work with React, but the solution should give you a general idea). We will be covering them in the form of exercises.
+
+Also, good naming reduces the need for comments.
+
+> Though we will add comments in the exercises to explain the problem and solution, in real life, we should avoid comments as much as possible by writing self-explanatory code.
+
+## Exercise 1
+
+### Problem
+
+<Problem1 />
+
+### Solution
+
+<Problem1Solution />
+
+## Exercise 2
+
+### Problem
+
+<Problem2 />
+
+### Solution
+
+<Problem2Solution />
+
+## Some General Tips
+
+> The above exercises are just a few examples of how to name stuff. They are just examples and not be taken as hard and fast rules. The main idea is to make the code self-explanatory without adding comments or introducing cognitive load.
+> Based on the codebase, the naming conventions might change. For example, in a codebase, we might use `i` for an index in a loop, but in another codebase, we might use `index` or `idx`. The main idea is to make the code self-explanatory.
+
+- We also suggest using `const` over `let` and `let` over `var` as much as possible. This is because `const` is a signal that the identifier won't be reassigned. (Some might argue here)
+- Constants should be named using `UPPER_CASE` and should be declared at the top of the file or ideally exported from a file.
+- In JavaScript, we suggest using `camelCase` for naming variables, functions, and objects. We suggest using `PascalCase` for naming classes.
+- In CSS, we suggest using `kebab-case` for naming classes.
+- In React, we suggest using `PascalCase` for naming components.
+- Use the same term to describe the same concept in the codebase. For example, user, customer, and client should not be used interchangeably.
+- Use domain-specific names. For example, if you are working on a project related to finance, use terms like `account`, `transaction`, `ledger`, etc.
+- Do not be afraid to use long names. For example, `getCustomerById` is better than `getById`.
+- Do not use abbreviations. For example, `customer` is better than `cust`.
+- Do not be scared to refactor the names. If you find a better name, refactor it. Editors like VSCode make it easy to refactor names.
+- Use the same language for naming. For example, if you are using `get` for getting something, use `set` for setting something.
+- Functions should ideally be verbs or verb phrases.
+- Classes should ideally be nouns or noun phrases.
+
+### Further Reading
+
+- [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript?tab=readme-ov-file#variables): This is a public repository that contains a list of clean code practices in JavaScript. It is a good read and is also based on the book ["Clean Code"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/).
+- [Cory House on Twitter](https://twitter.com/housecor?lang=en) has a lot of good tweets on naming stuff and best practices.
+
+> Also, you should look at the codebase of popular open-source projects to see how they are naming stuff. An example project would be [Lodash](https://github.com/lodash/lodash)
