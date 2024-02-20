@@ -12,7 +12,7 @@ Also, buckle up, this is going to be a long ride.
 
 ## Render Test
 
-Now, as a frontend developer it is easier to work with visible things. We already know that the component is visible in the browser. 
+Now, as a frontend developer it is easier to work with visible things. We already know that the component is visible in the browser.
 
 But, why do even need to test it? Writing tests for this seems futile. Right now, the component is very simple. But, as the component grows, it will become more complex and we cannot be sure that any new changes will not cause regressions.
 
@@ -31,6 +31,7 @@ describe('App', () => {
   test('should render input field and add button', () => {});
 });
 ```
+
 As we previously wrote a sample test for the `sum` function. Every test should have a meaningful name. The test name should describe what the test is doing. In this case, we are testing if the App component renders the input field and the add button. (read more about [test API here](https://vitest.dev/api/#test))
 
 Describe is used to group tests. It is not necessary to use describe, but it is a good practice to group tests. It helps in organizing the tests and also helps in debugging. (read more about [describe API here](https://vitest.dev/api/#describe))
@@ -58,6 +59,7 @@ We need to query the DOM to check if the input field and the button are present.
 There are various queries that we can use. In general, following the guidelines of RTL (read the [priority here](https://testing-library.com/docs/queries/about#priority)) for the query priority order is a good idea.
 
 To summarise at a high level, we need to use the queries that are closest to the user. In our case:
+
 - We'll use `getByRole` to query the input and the button.
 
 ```tsx showLineNumbers {9-10} filename="./src/App.test.tsx"
@@ -113,6 +115,7 @@ The test should pass with an output like this:
 ### Improving the Test
 
 Now, `toBeDefined` is not the best matcher to use here. We can use `toBeInTheDocument` matcher from `@testing-library/jest-dom` to check if the element is present in the DOM. (read more about [toBeInTheDocument matcher here](https://testing-library.com/docs/queries/about#priority))
+
 - Read [this stackoverflow answer here](https://stackoverflow.com/questions/73783371/difference-between-tobeinthedocument-and-tobedefined) to understand the difference between `toBeDefined` and `toBeInTheDocument`.
 
 So, let us install `@testing-library/jest-dom` and use the `toBeInTheDocument` matcher.
@@ -123,7 +126,7 @@ npm install -D @testing-library/jest-dom
 
 We will actually import the `vitest` compatible version of `@testing-library/jest-dom` from `@testing-library/jest-dom/vitest`. (read more about [vitest compatible version here](https://github.com/testing-library/jest-dom?tab=readme-ov-file#with-vitest))
 
-And it would import the entire thing. 
+And it would import the entire thing.
 
 ```tsx showLineNumbers {3,12-13} filename="./src/App.test.tsx"
 import { describe, expect, test } from 'vitest';
@@ -142,9 +145,10 @@ describe('App', () => {
   });
 });
 ```
+
 Run the test again and it should pass.
 
-The `jest-dom` import (line 3 in the above snippet) usually happens in a separate setup file for all the tests in our application. We will do that now as a good practice. 
+The `jest-dom` import (line 3 in the above snippet) usually happens in a separate setup file for all the tests in our application. We will do that now as a good practice.
 
 Create a new file `setupTests.ts` at the root of the project and add the import there.
 
@@ -205,6 +209,7 @@ This is because the `setupTests.ts` file is not being included by TypeScript in 
 ```
 
 Save the file and the error should go away.
+
 </Steps>
 
 Great, we wrote our first test that is actually useful. But, we are not done yet. We need to test the further functionality of the component.
@@ -256,7 +261,7 @@ describe('App', () => {
 });
 ```
 
-So, how can we test user interaction? If we look at the docs of `Testing Library`, you can see a section for `User Actions` under the `Core API` and a page for `Firing Events`. [Here's the exact link to the page](https://testing-library.com/docs/dom-testing-library/api-events). 
+So, how can we test user interaction? If we look at the docs of `Testing Library`, you can see a section for `User Actions` under the `Core API` and a page for `Firing Events`. [Here's the exact link to the page](https://testing-library.com/docs/dom-testing-library/api-events).
 
 Inputs are usually changed and buttons are clicked. We pretty much end up with something like this:
 
@@ -423,7 +428,7 @@ function App() {
       {/* Some of the code omitted for brevity */}
       <input
         readOnly
-        id="task-input"
+        id='task-input'
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
       />
@@ -481,7 +486,7 @@ describe('App', () => {
 });
 ```
 
-Our tests __should fail__. Because we are using `readOnly` on the input field. So, remove the `readOnly` prop from the input field and run the tests again.
+Our tests **should fail**. Because we are using `readOnly` on the input field. So, remove the `readOnly` prop from the input field and run the tests again.
 
 ```tsx showLineNumbers filename="./src/App.tsx"
 // Rest of the code omitted for brevity
@@ -493,7 +498,7 @@ function App() {
     <div>
       {/* Some of the code omitted for brevity */}
       <input
-        id="task-input"
+        id='task-input'
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
       />

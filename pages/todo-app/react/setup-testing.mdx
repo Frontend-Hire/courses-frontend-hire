@@ -8,15 +8,15 @@ Testing is important. Testing is necessary. Developers need to do it.
 
 Manual testing is expensive and time consuming. Automated testing is cheap and fast.
 
-Also, there are not a lot of testing tutorials out there as much as there are tutorials on how to build a web app. 
+Also, there are not a lot of testing tutorials out there as much as there are tutorials on how to build a web app.
 
-This causes a lot of developers to avoid testing just because of their lack of understading of the process and the tools. Even I don't like testing as a frontend developer. But I have a system that works for me and I want to share it with you. 
+This causes a lot of developers to avoid testing just because of their lack of understading of the process and the tools. Even I don't like testing as a frontend developer. But I have a system that works for me and I want to share it with you.
 
 But first, we need to setup our tools.
 
 ## Vitest
 
-Since we are using Vite, we greatly benefit from a native testing solution which is Vitest. You can read more about [Why Vitest here](https://vitest.dev/guide/why.html). 
+Since we are using Vite, we greatly benefit from a native testing solution which is Vitest. You can read more about [Why Vitest here](https://vitest.dev/guide/why.html).
 
 Most companies out there use Jest for testing. Luckily, Vitest is compatible with Jest.
 
@@ -33,19 +33,19 @@ Let us test if Vitest is working. The following steps are directly taken from th
 
 ```ts filename="./src/sum.ts"
 export function sum(a: number, b: number) {
-  return a + b
+  return a + b;
 }
 ```
 
 ### Similarly, create a file called `sum.test.ts` inside the `src` folder. Paste the following code inside it:
 
 ```ts filename="./src/sum.test.ts"
-import { expect, test } from 'vitest'
-import { sum } from './sum'
+import { expect, test } from 'vitest';
+import { sum } from './sum';
 
 test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3)
-})
+  expect(sum(1, 2)).toBe(3);
+});
 ```
 
 ### Update yours `package.json` file to include the following script:
@@ -61,7 +61,7 @@ test('adds 1 + 2 to equal 3', () => {
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepare": "husky install"
-  },
+  }
 
   // Rest of the file omitted for brevity
 }
@@ -78,11 +78,11 @@ And then, you should see something like this:
 
 </Steps>
 
-In fact, this little test we wrote is what we call a `unit test`. It is a test that tests a small unit of code. In this case, we are testing the `sum` function. 
+In fact, this little test we wrote is what we call a `unit test`. It is a test that tests a small unit of code. In this case, we are testing the `sum` function.
 
-These kinds of tests are very important because they test the small units of code that make up your app. 
+These kinds of tests are very important because they test the small units of code that make up your app.
 
-Also, using a __TDD__ (Test Driven Development) approach is easier with unit tests. You can straight away write the unit tests and then write the code to make the tests pass.
+Also, using a **TDD** (Test Driven Development) approach is easier with unit tests. You can straight away write the unit tests and then write the code to make the tests pass.
 
 Okay, now that we have Vitest setup. We just need one more tool to finish our setup.
 

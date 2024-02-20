@@ -3,12 +3,12 @@ import { Steps, Callout } from 'nextra/components';
 # Project Setup
 
 <Steps>
-### Vite + React + TypeScript
+### Vite + Vanilla JavaScript + TypeScript
  
-We will use the Vite template with React and TypeScript as our starting point. To get started, run the following command in your terminal:
+We will use the Vite template with Vanilla JS and TypeScript as our starting point. To get started, run the following command in your terminal:
 
 ```sh
-npm create vite@latest todo-app -- --template react-ts
+npm create vite@latest todo-app -- --template vanilla-ts
 ```
 
 Then, navigate to the project directory and install the dependencies.
@@ -79,6 +79,23 @@ We can now format all files in our project by running the following command in o
 npx prettier . --write
 ```
 
+Let us simplify this for our project by adding it as a script.
+
+Update your `package.json` file to include the following:
+
+```json filename="package.json" {7} showLineNumbers
+{
+  // Omited other properties for brevity
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier . --write"
+  }
+  // Omited other properties for brevity
+}
+```
+
 ### Prettier: Editor Integration
 
 We assume that you are using VSCode as your editor. If not, you can still follow along but you will have to figure out how to integrate Prettier with your editor. Guide for other editors can be found [here](https://prettier.io/docs/en/editors).
@@ -96,7 +113,66 @@ You can also do this through the UI. Open the VSCode settings and search for `fo
 
 ### ESLint
 
-ESLint is a tool for finding and fixing bugs in our JavaScript code. It also helps us to enforce code style and formatting conventions. Vite template already comes with ESLint installed.
+ESLint is a tool for finding and fixing bugs in our JavaScript code. It also helps us to enforce code style and formatting conventions.
+
+To quickly set up ESLint, run the following command in your terminal:
+
+```sh
+npm init @eslint/config
+```
+
+You will be prompted to answer a few questions. Here are the options we should select:
+
+- **How would you like to use ESLint?**
+  - To check syntax and find problems (why not also enforce code style? Because prettier does a better job at that)
+- **What type of modules does your project use?**
+  - JavaScript modules (import/export)
+- **Which framework does your project use?**
+  - None of these
+- **Does your project use TypeScript?**
+  - Yes
+- **Where does your code run?**
+  - Browser
+- **What format do you want your config file to be in?**
+  - JSON
+
+Use the below image as a reference:
+![ESLint init](./screenshots/project-setup-1.png)
+
+After answering the questions, you will see a `.eslintrc.json` file in your project directory. It should look something like this:
+
+```json filename=".eslintrc.json" showLineNumbers
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {}
+}
+```
+
+Let us also update our `package.json` to add a script to run eslint.
+
+```json filename="package.json" {8} showLineNumbers
+{
+  // Omited other properties for brevity
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier . --write",
+    "lint": "eslint ."
+  }
+  // Omited other properties for brevity
+}
+```
 
 Since the formatting rules can sometimes conflict with Prettier, we will use the [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier#installation) to handle these conflicts.
 
@@ -108,26 +184,25 @@ npm install --save-dev eslint-config-prettier
 
 Then, update your `.eslintrc.*` file to extend the `eslint-config-prettier` config (it is just the string `prettier`):
 
-```js {8} showLineNumbers
-module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-    'prettier',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+```js {9} showLineNumbers
+{
+  "env": {
+    "browser": true,
+    "es2021": true
   },
-};
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {}
+}
 ```
 
 ### Git Hooks
@@ -146,52 +221,36 @@ node --eval "fs.writeFileSync('.husky/pre-commit','npx lint-staged\n')"
 
 Then, update your `package.json` file to include the following:
 
-```json
+```json filename="package.json" {10-17} showLineNumbers
 {
+  // Omited other properties for brevity
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier . --write",
+    "lint": "eslint .",
+    "prepare": "husky"
+  },
   "lint-staged": {
-    "**/*.{js,ts,jsx,tsx}": [
+    "src/**/*.{js,ts,jsx,tsx}": [
       "eslint --fix",
       "prettier --write --ignore-unknown"
     ],
-    "!**/*.{js,ts,jsx,tsx}": ["prettier --write --ignore-unknown"]
+    "!src/**/*.{js,ts,jsx,tsx}": ["prettier --write --ignore-unknown"]
+  },
+  "devDependencies": {
+    // Omited other properties for brevity
   }
 }
 ```
 
+Now, every time you commit your code, Prettier and ESLint will run on the files that are being committed. Also, we prevent a race condition by not allowing ESLint and Prettier to run on the same files at the same time. Read more about configuring lint-staged [here](https://github.com/lint-staged/lint-staged?tab=readme-ov-file#configuration)
+
 ### Great! Now, we are all set to start coding!
 
-But let's first clear some of the boilerplate code that comes with the Vite template.
+WORK IN PROGRESS
 
-- Delete the `App.css` file and `assets` folder from the `src` directory.
-- Clear the contents of the `index.css` file.
-- Update the contents of the `./src/App.tsx` file to the following:
-
-```tsx showLineNumbers filename="./src/App.tsx"
-function App() {
-  return <div>Hello World!</div>;
-}
-
-export default App;
-```
-
-Let's save our work and commit it to Git.
-
-```sh
-git add .
-git commit -m "Initial commit"
-```
-
-And run our app to make sure everything is working as expected.
-
-```sh
-npm run dev
-```
-
-You should see the following in your browser:
-![Expected output](./screenshots/project-setup-1.png)
-
-That's it! We are now ready to start coding our Todo App!
-
-At this point, your code should be a good match to the branch of the repository: [1-project-setup](https://github.com/Frontend-Hire/todo-app-react-tdd-typescript/tree/1-project-setup)
+{/* At this point, your code should be a good match to the branch of the repository: [1-project-setup](https://github.com/Frontend-Hire/todo-app-react-tdd-typescript/tree/1-project-setup) */}
 
 </Steps>
