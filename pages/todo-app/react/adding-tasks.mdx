@@ -25,15 +25,15 @@ First, let's add a text input and a button to the page. We'll add them just abov
 // Rest of the code omitted for brevity
 ```
 
-Though this is good enough for now, we can and __should__ make it more accessible by adding a label for the input and a `htmlFor` attribute on the label that matches the `id` of the input.
+Though this is good enough for now, we can and **should** make it more accessible by adding a label for the input and a `htmlFor` attribute on the label that matches the `id` of the input.
 
 ```tsx {5, 6} filename="./src/App.tsx"
 // Rest of the code omitted for brevity
 
 <div>
   <h1>Tasks</h1>
-  <label htmlFor="task-input">Add Task: </label>
-  <input id="task-input" />
+  <label htmlFor='task-input'>Add Task: </label>
+  <input id='task-input' />
   <button>Add</button>
   <ul>
     {tasks.map((task) => (
@@ -56,8 +56,8 @@ The Add button does't do anything yet. Let's add a click handler to it that will
 
 <div>
   <h1>Tasks</h1>
-  <label htmlFor="task-input">Add Task: </label>
-  <input id="task-input" />
+  <label htmlFor='task-input'>Add Task: </label>
+  <input id='task-input' />
   <button
     onClick={() => {
       console.log('Add');
@@ -75,10 +75,9 @@ The Add button does't do anything yet. Let's add a click handler to it that will
 // Rest of the code omitted for brevity
 ```
 
-Let's capture the value of the input and log it to the console. One of the ways to do this in React is to use a state variable to track the value of the input. 
+Let's capture the value of the input and log it to the console. One of the ways to do this in React is to use a state variable to track the value of the input.
 
 We'll use the `useState` hook to create a state variable and a setter function for it. We'll also add a `value` attribute to the input and set it to the state variable. While we are at it, let's also add a `onChange` handler to the input that will update the state variable. This input is now a [controlled input](https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable).
-
 
 ```tsx filename="./src/App.tsx" {1, 8, 16-17}
 import React from 'react';
@@ -95,7 +94,7 @@ function App() {
       {/* Some of the code omitted for brevity */}
 
       <input
-        id="task-input"
+        id='task-input'
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
       />
@@ -112,13 +111,13 @@ Now, we can update the button click handler to log the value of the input.
 ```tsx {5} filename="./src/App.tsx"
 // Rest of the code omitted for brevity
 
-  <button
-    onClick={() => {
-      console.log(taskName);
-    }}
-  >
-    Add
-  </button>
+<button
+  onClick={() => {
+    console.log(taskName);
+  }}
+>
+  Add
+</button>
 
 // Rest of the code omitted for brevity
 ```
@@ -149,30 +148,34 @@ Now, we can add a task to the list by updating the `tasks` state variable. We'll
 ```tsx {5-11} filename="./src/App.tsx"
 // Rest of the code omitted for brevity
 
-  <button
-    onClick={() => {
-      setTasks([
-        ...tasks,
-        {
-          id: new Date().getTime(), // Not a great way to generate IDs
-          title: taskName,
-          isCompleted: false,
-        },
-      ]);
-    }}
-  >
-    Add
-  </button>
+<button
+  onClick={() => {
+    setTasks([
+      ...tasks,
+      {
+        id: new Date().getTime(), // Not a great way to generate IDs
+        title: taskName,
+        isCompleted: false,
+      },
+    ]);
+  }}
+>
+  Add
+</button>
 
 // Rest of the code omitted for brevity
 ```
+
 <Callout>
-As discussed in the previous section, unique IDs are usually created by a database. In this project, we'll use the [current time in milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime) as the ID for each task.
+  As discussed in the previous section, unique IDs are usually created by a
+  database. In this project, we'll use the [current time in
+  milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime)
+  as the ID for each task.
 </Callout>
 
-Great, we are now able to add tasks to the list! 
+Great, we are now able to add tasks to the list!
 
-Our JSX code is getting a bit long, so let's separate the button's `onClick` handler into its own function. The input's `onChange` handler is __fine__ for now.
+Our JSX code is getting a bit long, so let's separate the button's `onClick` handler into its own function. The input's `onChange` handler is **fine** for now.
 
 ```tsx {8-17, 23} filename="./src/App.tsx"
 // Rest of the code omitted for brevity
@@ -199,7 +202,7 @@ function App() {
 
       <button onClick={onAddTask}>Add</button>
 
-     {/* Some of the code omitted for brevity */}
+      {/* Some of the code omitted for brevity */}
     </div>
   );
 }
@@ -207,8 +210,8 @@ function App() {
 export default App;
 ```
 
-Awesome, but there are a ton of things that can go wrong when a user adds a task. For example, the user can add an empty task. 
+Awesome, but there are a ton of things that can go wrong when a user adds a task. For example, the user can add an empty task.
 
-This gives us a good opportunity to learn about __Testing__. We'll cover testing in the subsequent sections.
+This gives us a good opportunity to learn about **Testing**. We'll cover testing in the subsequent sections.
 
 At this point your code should be a good match to the branch of the repository: [3-adding-tasks](https://github.com/Frontend-Hire/todo-app-react-tdd-typescript/tree/3-adding-tasks)

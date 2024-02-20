@@ -3,7 +3,7 @@ import { Steps, Callout } from 'nextra/components';
 # TDD (Test Driven Development)
 
 Let's run our dev server and see the current state of our Todo app.
-  
+
 ```sh
 npm run dev
 ```
@@ -40,7 +40,7 @@ Now, let's get started with TDD.
 
 ### Declare the tests first
 
-A good name for the tests would be: 
+A good name for the tests would be:
 
 1. `should clear the input field after adding a task`.
 2. `should not add an empty task`.
@@ -135,7 +135,10 @@ function App() {
 Literally, all we did was to add `setTaskName('')` after adding the task to the list of tasks. Our tests should now pass.
 
 <Callout>
-Too much test code for a simple implementation? Yes, might seem useless but imagine in the future you had to refactor the code (any software will always grow unless abandoned) and you forgot to clear the input field after adding a task. Your tests would fail and you would know that you need to fix the code.
+  Too much test code for a simple implementation? Yes, might seem useless but
+  imagine in the future you had to refactor the code (any software will always
+  grow unless abandoned) and you forgot to clear the input field after adding a
+  task. Your tests would fail and you would know that you need to fix the code.
 </Callout>
 
 ### Test: should not add an empty task
@@ -213,6 +216,7 @@ You can already see that we unintentionally fixed an edge case where the added t
 You could also disable the add button if the input field is empty. It is usually considered a bad practice to disable buttons and I agree with that. The why is out of the scope of this tutorial.
 
 But I'd suggest reading the article "[The problem with disabled buttons and what to do instead](https://adamsilver.io/blog/the-problem-with-disabled-buttons-and-what-to-do-instead/)" by [Adam Silver](https://adamsilver.io/) to learn more about why you should not disable buttons.
+
 </Callout>
 
 ### Test: should add a task by pressing the enter key
@@ -261,7 +265,7 @@ function App() {
       {/* Rest of the code is omitted for brevity */}
 
       <input
-        id="task-input"
+        id='task-input'
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
         onKeyDown={(e) => {
@@ -300,12 +304,12 @@ function App() {
       {/* Rest of the code is omitted for brevity */}
 
       <input
-        id="task-input"
+        id='task-input'
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
         onKeyDown={onInputKeyDown}
       />
-      
+
       {/* Rest of the code is omitted for brevity */}
     </div>
   );

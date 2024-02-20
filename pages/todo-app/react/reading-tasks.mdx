@@ -27,10 +27,10 @@ Let's start with the first question. What properties does a task have? We'll sta
 
 Now let's think about the types for each of these properties. We'll start with the following:
 
-- __Unique ID__ can be a number or a string, but we'll use a number for now.
-- __Title__ is a string.
-- __Completion Status__ is a boolean.
-- __Priority__ is optional, but it can only be one of three values: `'p1'`, `'p2'`, or `'p3'`.
+- **Unique ID** can be a number or a string, but we'll use a number for now.
+- **Title** is a string.
+- **Completion Status** is a boolean.
+- **Priority** is optional, but it can only be one of three values: `'p1'`, `'p2'`, or `'p3'`.
 
 This gives us the following types for `Task` and `Priority`:
 
@@ -44,8 +44,12 @@ type Task = {
   priority?: Priority;
 };
 ```
+
 <Callout>
-Unique IDs are usually created by a database. In this project, we'll use the [current time in milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime) as the ID for each task.
+  Unique IDs are usually created by a database. In this project, we'll use the
+  [current time in
+  milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime)
+  as the ID for each task.
 </Callout>
 
 ## Render Tasks with Default Data
@@ -73,7 +77,9 @@ Now that we have some data, let's render it to the screen. We'll use the `map` m
 ```
 
 <Callout>
-The `key` prop is required when rendering a list of items. It helps React keep track of which items have changed, are added, or are removed. Read more about rendering lists and keys [here](https://react.dev/learn/rendering-lists).
+  The `key` prop is required when rendering a list of items. It helps React keep
+  track of which items have changed, are added, or are removed. Read more about
+  rendering lists and keys [here](https://react.dev/learn/rendering-lists).
 </Callout>
 
 Putting it all together, we should have the following `App.tsx` file:

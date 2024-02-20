@@ -92,8 +92,8 @@ Our code is now more modular and easier to understand. Our UI is now composed of
 
 This refactoring sounds okay, but we are passing a lot of unneccessary props compared to our initial implementation and we lost some natural semantics in our code.
 
-- We pass the `title` prop to the `TaskListItem` component. It would be nicer if we could pass it like ```<TaskListItem>{task.title}</TaskListItem>```.
-- We pass the `tasks` prop to the `TaskList` component and just forward the title from it to the `TaskListItem` component. It would be nicer if we could pass it like ```<TaskList>{tasks.map(task => <TaskListItem>{task.title}</TaskListItem>)}</TaskList>```.
+- We pass the `title` prop to the `TaskListItem` component. It would be nicer if we could pass it like `<TaskListItem>{task.title}</TaskListItem>`.
+- We pass the `tasks` prop to the `TaskList` component and just forward the title from it to the `TaskListItem` component. It would be nicer if we could pass it like `<TaskList>{tasks.map(task => <TaskListItem>{task.title}</TaskListItem>)}</TaskList>`.
 
 Let's remove these unneccessary props by using composition.
 
@@ -164,7 +164,8 @@ function App() {
 This code feels more natural and we're not passing any unneccessary props.
 
 <Callout>
-Technically speaking, we are still passing the same props but in a different way.
+  Technically speaking, we are still passing the same props but in a different
+  way.
 </Callout>
 
 Let's see how powerful our composition is now. Assume we have a requirement to show the number of tasks in the `TaskList` component. We can easily do that by adding a new component called `TaskListHeader` and using it inside the `TaskList` component.
@@ -205,7 +206,7 @@ function App() {
 // Rest of the code omitted for brevity
 ```
 
-But we have a problem. The `TaskListHeader` component is not a list item inside the `TaskList` component. We can this by creating a `slot` called `header` prop in the `TaskList` component and passing the `TaskListHeader` component to that slot. 
+But we have a problem. The `TaskListHeader` component is not a list item inside the `TaskList` component. We can this by creating a `slot` called `header` prop in the `TaskList` component and passing the `TaskListHeader` component to that slot.
 
 ```tsx showLineNumbers {1-3, 6, 8, 10, 11, 13} filename="./src/TaskList.tsx"
 type TaskListProps = {

@@ -19,7 +19,7 @@ npm install
 ```
 
 Read more about scaffolding a Vite project [here](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
- 
+
 ### Git
 
 Who doesn't use Git these days? We will use Git to manage our code versioning.
@@ -33,7 +33,10 @@ git init
 ### Prettier: The Opinionated Code Formatter
 
 <Callout>
-  Why should we even care about formatting our code? Well, it is a good practice to have a consistent code style across your project. It makes it easier for other developers to read and understand your code. It also makes it easier to spot errors and bugs.
+  Why should we even care about formatting our code? Well, it is a good practice
+  to have a consistent code style across your project. It makes it easier for
+  other developers to read and understand your code. It also makes it easier to
+  spot errors and bugs.
 </Callout>
 
 We pretty much follow the same install instructions from the [Prettier Docs](https://prettier.io/docs/en/install).
@@ -62,7 +65,7 @@ and add the following to it. Feel free to change the values to your liking (this
 }
 ```
 
-We also want to __not__ format certain files. In this project, we would not have such files but it is still a good idea to create one. Create a `.prettierignore` file and add the following:
+We also want to **not** format certain files. In this project, we would not have such files but it is still a good idea to create one. Create a `.prettierignore` file and add the following:
 
 ```sh
 # Ignore artifacts:
@@ -129,11 +132,12 @@ module.exports = {
 
 ### Git Hooks
 
-Git hooks are scripts that run automatically every time a particular event occurs in a Git repository. We will use it to run Prettier and ESLint before we commit our code. 
+Git hooks are scripts that run automatically every time a particular event occurs in a Git repository. We will use it to run Prettier and ESLint before we commit our code.
 
 This will ensure that we do not commit code that does not follow our code style and formatting conventions.
 
 Install Husky and lint-staged while also setting husky script and a pre-commit hook by running the following commands in your terminal:
+
 ```sh
 npm install --save-dev husky lint-staged
 npx husky init
@@ -141,17 +145,22 @@ node --eval "fs.writeFileSync('.husky/pre-commit','npx lint-staged\n')"
 ```
 
 Then, update your `package.json` file to include the following:
+
 ```json
 {
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ],
+    "!**/*.{js,ts,jsx,tsx}": ["prettier --write --ignore-unknown"]
   }
 }
 ```
 
 ### Great! Now, we are all set to start coding!
 
-But lets first clear some of the boilerplate code that comes with the Vite template.
+But let's first clear some of the boilerplate code that comes with the Vite template.
 
 - Delete the `App.css` file and `assets` folder from the `src` directory.
 - Clear the contents of the `index.css` file.
@@ -183,6 +192,6 @@ You should see the following in your browser:
 
 That's it! We are now ready to start coding our Todo App!
 
-At this point your code should be a good match to the branch of the repository: [1-project-setup](https://github.com/Frontend-Hire/todo-app-react-tdd-typescript/tree/1-project-setup)
+At this point, your code should be a good match to the branch of the repository: [1-project-setup](https://github.com/Frontend-Hire/todo-app-react-tdd-typescript/tree/1-project-setup)
 
 </Steps>
