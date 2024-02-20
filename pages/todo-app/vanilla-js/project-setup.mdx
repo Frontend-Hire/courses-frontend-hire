@@ -249,8 +249,29 @@ Now, every time you commit your code, Prettier and ESLint will run on the files 
 
 ### Great! Now, we are all set to start coding!
 
-WORK IN PROGRESS
+Let us also clean up our project by removing the unnecessary files and default code that comes with the Vite template.
 
-{/* At this point, your code should be a good match to the branch of the repository: [1-project-setup](https://github.com/Frontend-Hire/todo-app-react-tdd-typescript/tree/1-project-setup) */}
+- Delete the `counter.ts` file from the `src` directory.
+- Delete the `typescript.svg` file from the `src` directory.
+- Clear the contents of the `style.css` from the `src` directory.
+- Update the `main.ts` file in the `src` directory to look like this:
+
+```ts filename="src/main.ts" {1-5} showLineNumbers
+import './style.css';
+
+document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+<div>Hello World!</div>
+`;
+```
+
+Now run the following command in your terminal to start the development server:
+
+```sh
+npm run dev
+```
+
+You should see "Hello World!" in your browser if you open the URL the server is running on.
+
+At this point, your code should be a good match to the branch of the repository: [1-project-setup](https://github.com/Frontend-Hire/todo-app-js-tdd-typescript/tree/1-project-setup)
 
 </Steps>
