@@ -18,10 +18,11 @@ We welcome contributions from the community! If you're interested in contributin
 
 ### Making Contributions
 
-1. **Fork the Repository:** Start by forking the repository to your GitHub account.
-2. **Create a Branch:** Create a branch in your forked repository for your changes or new content.
-3. **Commit Changes:** Make and commit your changes with clear and concise commit messages.
-4. **Submit a Pull Request:** Once you're ready, submit a pull request from your branch to the `courses-frontend-hire` main branch.
+1. **Tech Stack:** This project pretty much uses [NextJS](https://nextjs.org/docs) (pages router) with [Nextra](https://nextra.site/) and any coding examples would use [Sandpack](https://sandpack.codesandbox.io/). Refer to their official docs for any guidance.
+2. **Fork the Repository:** Start by forking the repository to your GitHub account.
+3. **Create a Branch:** Create a branch in your forked repository for your changes or new content.
+4. **Commit Changes:** Make and commit your changes with clear and concise commit messages.
+5. **Submit a Pull Request:** Once you're ready, submit a pull request from your branch to the `courses-frontend-hire` main branch.
 
 Please ensure that your contributions adhere to the following:
 
