@@ -4,6 +4,7 @@
     "type": "separator"
   },
   "todo-app": "Todo App with TypeScript and TDD",
+  "stackpack": "Stackpack: Sandpack clone with WebContainers in React and TypeScript",
   "Frontend Hire": {
     "title": "Frontend Hire ↗",
     "type": "page",
