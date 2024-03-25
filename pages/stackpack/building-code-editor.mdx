@@ -1,0 +1,127 @@
+import { FileTree, Callout } from 'nextra/components';
+
+# Building Code Editor
+
+Though the title says "Building Code Editor," we would do more of an "Assembling Code Editor."
+
+Code Editors are extremely challenging to build from scratch, and there is no reason for anyone to create something like that from scratch. There are three great open-source options:
+
+- [**Ace**](https://ace.c9.io/): The editor that powers Cloud9 IDE. It is a great editor that powers many online code editors. It is a bit old and not as actively maintained as it used to be.
+
+- [**Monaco Editor**](https://github.com/microsoft/monaco-editor): The editor that powers VSCode. This course will use the [React wrapper](https://github.com/suren-atoyan/monaco-react).
+
+- [**CodeMirror**](https://codemirror.net/): A minimalist code editor that is highly extensible. We use this on the Frontend Hire coding workspace.
+
+All the editors are great, and you can use any of them. This course will use Monaco Editor. We use CodeMirror on the Frontend Hire coding workspace because it is lightweight and feels cleaner for practicing coding. We did not use Ace to have much of an opinion on it.
+
+You can read more about the differences between the editors [Ace, CodeMirror, and Monaco: A Comparison of the Code Editors You Use in the Browser](https://blog.replit.com/code-editors). It is an excellent comparison from Faris Masad at Replit.
+
+## Setting Up Monaco Editor
+
+As mentioned, we will use the [React wrapper for Monaco Editor](https://github.com/suren-atoyan/monaco-react).
+
+Let us install it:
+
+```bash
+npm install @monaco-editor/react
+```
+
+Let us create a component called `CodeEditor.tsx` to render the code editor and other things like the files tab. We will place this component in the `components` folder inside its folder `CodeEditor`, do a barrel export, and render it in our `App.tsx`. [Joshua Comeau's Delightful React File Structure](https://www.joshwcomeau.com/react/file-structure/) inspired this structure.
+
+```tsx filename="src/components/CodeEditor/CodeEditor.tsx" showLineNumbers {1-3}
+export default function CodeEditor() {
+  return <div className='h-full border bg-red-100'>Code Editor</div>;
+}
+```
+
+```tsx filename="src/components/CodeEditor/index.ts" showLineNumbers {1-3}
+export * from './CodeEditor';
+
+export { default } from './CodeEditor';
+```
+
+```tsx filename="src/App.tsx" showLineNumbers {2, 11}
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import CodeEditor from './components/CodeEditor';
+
+export default function App() {
+  return (
+    <div className='h-dvh p-2'>
+      <PanelGroup direction='horizontal'>
+        <Panel>
+          <PanelGroup direction='vertical'>
+            <Panel>
+              <CodeEditor />
+            </Panel>
+            <PanelResizeHandle className='h-2 bg-blue-300' />
+            <Panel>
+              <div className='h-full border bg-red-100'>Terminal</div>
+            </Panel>
+          </PanelGroup>
+        </Panel>
+        <PanelResizeHandle className='w-2 bg-blue-300' />
+        <Panel>
+          <div className='h-full border bg-red-100'>Preview</div>
+        </Panel>
+      </PanelGroup>
+    </div>
+  );
+}
+```
+
+We will now render the Monaco Editor in the `CodeEditor` component.
+
+```tsx filename="src/components/CodeEditor/CodeEditor.tsx" showLineNumbers {1, 5, 6}
+import { Editor } from '@monaco-editor/react';
+
+export default function CodeEditor() {
+  return (
+    <div className='h-full'>
+      <Editor theme='vs-dark' />
+    </div>
+  );
+}
+```
+
+The `Editor` component takes a `theme` prop. We set it to `vs-dark` to use the dark theme. You can set it to `light` or omit it for the light theme.
+
+The editor now renders, but we must use the [multi-modal editor](https://github.com/suren-atoyan/monaco-react?tab=readme-ov-file#multi-model-editor) to support different files and languages. Before we do that, let us think about how we want to set up our code template.
+
+## Thinking our Code Template
+
+<Callout type='warning' emoji='⚠️'>
+  WebContainer API has its [own
+  way](https://webcontainers.io/guides/working-with-the-file-system) of working
+  with files and folders; ideally, we would like to use a structure that mimics
+  it. We will do the refactor in the next section when we integrate the
+  WebContainer API. We know this because we did a POC with the API and have read
+  the documentation well enough. We are not doing it now because the code editor
+  is a complex component, and we want to understand it first before adding the
+  WebContainer API.
+</Callout>
+
+In this course, we will only support React with Vite support. The files would take a top-level structure like the one below:
+
+<FileTree>
+  <FileTree.File name='App.jsx' />
+  <FileTree.File name='index.jsx' />
+  <FileTree.File name='index.html' />
+  <FileTree.File name='package.json' />
+  <FileTree.File name='vite.config.js' />
+</FileTree>
+
+We can use an object to represent the files. The keys would be the file names, and the value would be another object holding more information about the file, such as the contents. We could add more properties like `readOnly` and `hidden` to control the file's behavior in the editor. But for now, let us keep it simple with just the `contents` property.
+
+The types would look like this:
+
+```ts
+type File = {
+  contents: string;
+};
+
+type TEMPLATE = {
+  files: Record<string, File>;
+  entry: string;
+  visibleFiles: string[];
+};
+```
