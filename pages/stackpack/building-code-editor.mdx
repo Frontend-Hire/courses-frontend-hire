@@ -115,13 +115,135 @@ We can use an object to represent the files. The keys would be the file names, a
 The types would look like this:
 
 ```ts
-type File = {
+type CodeFile = {
   contents: string;
 };
 
-type TEMPLATE = {
-  files: Record<string, File>;
+type Template = {
+  files: Record<string, CodeFile>;
   entry: string;
   visibleFiles: string[];
 };
 ```
+
+We use CodeFile instead of File to represent the file to avoid conflicts with the [File Interface](https://developer.mozilla.org/en-US/docs/Web/API/File) in JavaScript. We use a Template to describe the code template. We are also not using an array for the files because we want to access the files by their names.
+
+Next up is the actual template. We will create a `templates` folder in the `src` folder and place the template in a file called `react-vite.ts` along with the types.
+
+```ts filename="src/templates/react-vite.ts" showLineNumbers {1-83}
+type CodeFile = {
+  contents: string;
+};
+
+type Template = {
+  files: Record<string, CodeFile>;
+  entry: string;
+  visibleFiles: string[];
+};
+
+export const VITE_REACT_TEMPLATE: Template = {
+  files: {
+    'App.jsx': {
+      contents: `export default function App() {
+  const data = "world"
+
+  return <h1>Hello {data}</h1>
+}
+`,
+    },
+
+    'index.jsx': {
+      contents: `import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+
+import App from "./App";
+
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);`,
+    },
+
+    'index.html': {
+      contents: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.jsx"></script>
+  </body>
+</html>
+`,
+    },
+
+    'package.json': {
+      contents: `{
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "3.1.0",
+        "vite": "4.1.4",
+        "esbuild-wasm": "0.17.12"
+    }
+}`,
+    },
+    'vite.config.js': {
+      contents: `import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+});
+`,
+    },
+  },
+  entry: 'App.jsx',
+  visibleFiles: ['App.jsx', 'index.jsx', 'index.html'],
+};
+```
+
+Now, let us use the template and try to populate our multi-modal editor.
+
+```tsx filename="src/components/CodeEditor/CodeEditor.tsx" showLineNumbers {3, 6-8, 10, 14-15}
+import React from 'react';
+import { Editor } from '@monaco-editor/react';
+import { VITE_REACT_TEMPLATE } from '../../templates/react-vite';
+
+export default function CodeEditor() {
+  const [activeFile, setActiveFile] = React.useState(
+    () => VITE_REACT_TEMPLATE.entry
+  );
+
+  const currentFile = VITE_REACT_TEMPLATE.files[activeFile];
+
+  return (
+    <div className='h-full'>
+      <Editor
+        theme='vs-dark'
+        path={activeFile}
+        defaultValue={currentFile.contents}
+      />
+    </div>
+  );
+}
+```
+
+The `path` prop is what enables this multi-modal editor. It tells the editor which files it is editing. The `defaultValue` prop sets the initial value of the editor. We use the `activeFile` state to keep track of the active file. We set it to the `entry` property of the template to start with the entry file.
+
+We also derive the `currentFile` from the `activeFile` to get the current file's contents. We use this to set the editor's default (initial) value. But how do we switch between files? We will add a files tab to the editor's top to switch between files.
+
+## Adding Files Tab
